@@ -738,9 +738,14 @@
             <div style="font-size: 0.72rem; color: var(--text-muted);">Strict Citation & Grounding Active</div>
           </div>
         </div>
-        <span style="font-size: 0.7rem; background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 9999px; font-weight: 700; border: 1px solid #a7f3d0;">
-          Conditional Auto
-        </span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 0.7rem; background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 9999px; font-weight: 700; border: 1px solid #a7f3d0;">
+            Conditional Auto
+          </span>
+          <button onclick="downloadTraceLog()" style="font-size: 0.72rem; background: white; color: var(--text-muted); border: 1px solid var(--border); padding: 5px 10px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+            ⬇️ Tải trace log
+          </button>
+        </div>
       </div>
 
       <!-- Chat Scroll Area -->
@@ -775,11 +780,87 @@
     </div>
   </div>
 
+  <script src="config.js"></script>
   <script>
     // Slide index mapping: 0 -> Trang 1, 1 -> Trang 5, 2 -> Trang 7
     const slidePages = [1, 5, 7];
     let currentSlideIdx = 0; // Starts on Trang 1 (unrelated / intro)
     let currentStep = 0; // 0 = Start, 1 = Happy Path (Slide 7), 2 = Cross-ref (Slide 5), 3 = Clarify (Slide 7), 4 = Out of scope
+
+    // ---- Real AI Tutor integration (via Cloudflare Worker proxy — xem worker/worker.js) ----
+    // Proxy giữ OPENAI_API_KEY phía server và tránh lỗi CORS khi gọi thẳng api.openai.com từ browser.
+    // System instruction + nội dung 3 đoạn slide (nguồn duy nhất) nay sống trong worker/worker.js.
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str == null ? '' : String(str);
+      return div.innerHTML;
+    }
+
+    function formatAnswerText(str) {
+      return escapeHtml(str).replace(/\n/g, '<br>');
+    }
+
+    window.traceLog = [];
+
+    async function askTutorAI(userQuestion) {
+      const timestamp = new Date().toISOString();
+      let output;
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: userQuestion })
+        });
+
+        const parsed = await response.json();
+
+        if (!response.ok) {
+          throw new Error(parsed && parsed.error ? parsed.error : `Proxy error ${response.status}`);
+        }
+        if (!parsed || !parsed.decision) throw new Error('Phản hồi thiếu trường "decision".');
+
+        output = parsed;
+        return parsed;
+      } catch (err) {
+        output = { error: err.message };
+        throw err;
+      } finally {
+        window.traceLog.push({ timestamp, input: userQuestion, output });
+      }
+    }
+
+    async function downloadTraceLog() {
+      const content = JSON.stringify(window.traceLog, null, 2);
+
+      // Chrome/Edge: cho chọn đúng thư mục lưu qua hộp thoại "Save As"
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: 'trace-log.json',
+            types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+          });
+          const writable = await handle.createWritable();
+          await writable.write(content);
+          await writable.close();
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return; // người dùng bấm Cancel
+          console.error('showSaveFilePicker failed, fallback sang tải thường:', err);
+        }
+      }
+
+      // Fallback (Firefox/Safari hoặc lỗi): tải về thư mục Downloads mặc định của trình duyệt
+      const blob = new Blob([content], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'trace-log.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
 
     function slideToIndex(idx) {
       if (idx < 0 || idx >= slidePages.length) return;
@@ -844,19 +925,19 @@
             </div>
           </div>
           <div class="starter-prompts">
-            <div class="prompt-chip" onclick="triggerPreset(1)">
+            <div class="prompt-chip" onclick="triggerPreset('Tại sao Output Token lại đắt hơn Input Token?')">
               <span>💬 Tại sao Output Token lại đắt hơn Input Token?</span>
               <span>➔</span>
             </div>
-            <div class="prompt-chip" onclick="triggerPreset(2)">
+            <div class="prompt-chip" onclick="triggerPreset('Cơ chế Self-Attention hoạt động như thế nào?')">
               <span>💬 Cơ chế Self-Attention hoạt động như thế nào?</span>
               <span>➔</span>
             </div>
-            <div class="prompt-chip" onclick="triggerPreset(3)">
+            <div class="prompt-chip" onclick="triggerPreset('Cái này dùng để làm gì?')">
               <span>💬 Cái này dùng để làm gì?</span>
               <span>➔</span>
             </div>
-            <div class="prompt-chip" onclick="triggerPreset(4)">
+            <div class="prompt-chip" onclick="triggerPreset('Lịch thi Hackathon ngày mai mấy giờ?')">
               <span>💬 Lịch thi Hackathon ngày mai mấy giờ?</span>
               <span>➔</span>
             </div>
@@ -1016,8 +1097,10 @@
       renderStep(0);
     }
 
-    function triggerPreset(stepTarget) {
-      renderStep(stepTarget);
+    function triggerPreset(questionText) {
+      const box = document.getElementById('chat-input-box');
+      box.value = questionText;
+      sendUserMessage();
     }
 
     // Citation interaction: jumps slide and displays flyout
@@ -1070,24 +1153,141 @@
       box.focus();
     }
 
-    function sendUserMessage() {
+    async function sendUserMessage() {
       const box = document.getElementById('chat-input-box');
       const val = box.value.trim();
       if (!val) return;
 
       const scroll = document.getElementById('chat-scroll');
+      box.value = '';
+
       scroll.innerHTML += `
         <div class="chat-row user">
-          <div class="msg-content">${val}</div>
+          <div class="msg-content">${escapeHtml(val)}</div>
         </div>
+        <div class="chat-row tutor" id="typing-indicator">
+          <div class="msg-content">🤔 AI đang suy nghĩ...</div>
+        </div>
+      `;
+      scroll.scrollTop = scroll.scrollHeight;
+
+      try {
+        const result = await askTutorAI(val);
+        const typingRow = document.getElementById('typing-indicator');
+        if (typingRow) typingRow.remove();
+
+        if (result.decision === 'ANSWER_WITH_CITE') {
+          renderAnswerWithCite(result);
+        } else if (result.decision === 'CLARIFY') {
+          renderClarify(result);
+        } else if (result.decision === 'OUT_OF_SCOPE') {
+          renderOutOfScope(result);
+        } else {
+          throw new Error(`Decision không hợp lệ từ API: ${result.decision}`);
+        }
+      } catch (err) {
+        console.error('askTutorAI failed:', err);
+        const typingRow = document.getElementById('typing-indicator');
+        if (typingRow) typingRow.remove();
+        renderApiError();
+      }
+
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function renderAnswerWithCite(result) {
+      const scroll = document.getElementById('chat-scroll');
+      const page = result.citation_page;
+      const isValidPage = page === 1 || page === 5 || page === 7;
+      const citeTag = isValidPage
+        ? `<span class="citation-tag" onclick="showFlyout(${page})">[Trang ${page}]</span>`
+        : '';
+
+      scroll.innerHTML += `
         <div class="chat-row tutor">
           <div class="msg-content">
-            Theo bài giảng tại <span class="citation-tag" onclick="showFlyout(${slidePages[currentSlideIdx]})">[Trang ${slidePages[currentSlideIdx]}]</span>, câu trả lời cho nội dung bạn vừa hỏi đã được đối chiếu trực tiếp với tài liệu buổi học.
+            ${formatAnswerText(result.answer)} ${citeTag}
+          </div>
+          <div class="row-actions">
+            <span class="action-btn" onclick="editInputPrompt()">✏️ Sửa câu hỏi (HAX G9)</span>
+            ${isValidPage ? `<span class="action-btn" onclick="showFlyout(${page})">🔍 Xem nguồn [Trang ${page}]</span>` : ''}
           </div>
         </div>
       `;
-      box.value = '';
-      scroll.scrollTop = scroll.scrollHeight;
+
+      if (isValidPage) {
+        jumpToPage(page);
+        document.getElementById('context-info').innerText = `📌 Câu trả lời có căn cứ tại [Trang ${page}]`;
+      }
+    }
+
+    function renderClarify(result) {
+      const scroll = document.getElementById('chat-scroll');
+      const containerId = `g10-opts-${Date.now()}`;
+
+      scroll.innerHTML += `
+        <div class="chat-row tutor">
+          <div class="msg-content">
+            ${formatAnswerText(result.answer)}
+            <div class="g10-card">
+              <div class="g10-title">⚡ HAX G10: Thu hẹp phạm vi — Bạn muốn tìm hiểu hướng nào?</div>
+              <div id="${containerId}"></div>
+            </div>
+          </div>
+          <div class="row-actions">
+            <span class="action-btn" onclick="editInputPrompt()">✏️ Gõ câu hỏi cụ thể hơn</span>
+          </div>
+        </div>
+      `;
+
+      const optionsContainer = document.getElementById(containerId);
+      const options = Array.isArray(result.clarify_options) ? result.clarify_options : [];
+      options.forEach((optionText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'g10-option-btn';
+        btn.textContent = `👉 ${idx + 1}. ${optionText}`;
+        btn.addEventListener('click', () => {
+          const box = document.getElementById('chat-input-box');
+          box.value = optionText;
+          sendUserMessage();
+        });
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function renderOutOfScope(result) {
+      const scroll = document.getElementById('chat-scroll');
+      scroll.innerHTML += `
+        <div class="chat-row tutor">
+          <div class="msg-content">
+            ${formatAnswerText(result.answer)}
+            <div class="fail-card">
+              <div style="font-weight:700; color:#991b1b; margin-bottom:4px;">Thông tin ngoài tài liệu bài giảng</div>
+              <div>Để nhận thông báo chính xác từ ban tổ chức:</div>
+              <button class="ta-discord-btn" onclick="alert('Đang mở liên kết kênh #ask-ta trên Discord của lớp!')">
+                💬 Chuyển câu hỏi cho TA trên Discord
+              </button>
+            </div>
+          </div>
+          <div class="row-actions">
+            <span class="action-btn" onclick="resetToBeginning()">🔄 Bắt đầu lại từ Bước 1</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderApiError() {
+      const scroll = document.getElementById('chat-scroll');
+      scroll.innerHTML += `
+        <div class="chat-row tutor">
+          <div class="msg-content">
+            <div class="fail-card">
+              <div style="font-weight:700; color:#991b1b; margin-bottom:4px;">⚠️ Lỗi khi gọi AI Tutor</div>
+              <div>Không thể lấy câu trả lời (lỗi kết nối hoặc định dạng phản hồi không hợp lệ). Vui lòng thử lại.</div>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     // Initialize in clean Step 0

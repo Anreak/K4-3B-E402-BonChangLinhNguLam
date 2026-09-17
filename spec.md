@@ -61,6 +61,15 @@ Loại: [x] Tối ưu tính năng có sẵn  [ ] Tính năng mới
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8) [bảng theo guide §2.5]
 
+| Lớp | Trigger | Biểu hiện | Hậu quả | Kịch bản minh hoạ |
+|---|---|---|---|---|
+| **L1 — Từ chối nhầm dù đủ căn cứ** | Câu hỏi rõ ràng, map thẳng vào đúng 1 đoạn slide | `decision` ra `CLARIFY`/`OUT_OF_SCOPE` dù ground truth là `ANSWER_WITH_CITE` | Học viên phải hỏi lại nhiều lần dù câu đã đủ rõ, giảm trải nghiệm | 1. "Multi-Head Attention là gì?" (rõ, Trang 5) đáng lẽ trả lời thẳng<br>2. "Cho tôi biết chi tiết về KV-Cache" (rõ, Trang 7) |
+| **L2 — Đoán bừa khi mơ hồ** | Câu hỏi ngắn/đại từ không rõ ngữ cảnh (có thể ánh xạ >1 đoạn) | `decision` ra `ANSWER_WITH_CITE` (chọn đại 1 trang) dù đúng ra cần `CLARIFY` | Trả lời sai ý học viên, dễ học sai kiến thức thi | 3. "Cái này giải quyết vấn đề gì?" (đại từ mơ hồ)<br>4. "Note lại giúp tôi" — không rõ ghi nội dung nào |
+| **L3 — Bịa/trả lời chung chung ngoài phạm vi nguồn** | Câu hỏi liên quan bề mặt tới chủ đề bài học (LLM, Transformer, token…) nhưng nội dung cụ thể không có trong 3 đoạn slide | `decision` ra `ANSWER_WITH_CITE` dùng kiến thức ngoài, hoặc answer không trace được về 3 đoạn nguồn | Root-cause chính đã đo trong evidence (3.781 lượt/28% thiếu trích dẫn, downvote 62,2%) | 5. "LLM bản chất là gì?" — hệ thống thật (T10366/T10429) từng trả lời bằng "kiến thức tổng quát", không trích dẫn<br>6. "Kiến trúc Transformer nói chung gồm những thành phần gì?" — thật (T10367) mô tả cả kiến trúc bằng kiến thức chung dù slide chỉ nói Self-Attention |
+| **L4 — Trích dẫn sai trang dù chọn đúng nhánh** | Hai đoạn slide có chủ đề/từ khoá gần nhau (Trang 5 & Trang 7 đều thuộc "kỹ thuật LLM") | `decision` = `ANSWER_WITH_CITE` đúng, nhưng `citation_page` sai | Học viên đối chiếu nhầm trang khi ôn bài, giống hệt evidence gốc | 7. "Cơ chế nào khiến việc sinh Output tốn kém hơn Input?" — dễ nhầm sang Trang 5 (chữ "cơ chế") dù đúng là Trang 7<br>8. "Cách tính chi phí khi gọi model qua API là gì?" — gần giống bullet nông ở Trang 1 nhưng nội dung số liệu thật nằm ở Trang 7 |
+
+Chi tiết case + kỳ vọng đầy đủ (≥2 case/lớp): xem `eval/golden-set.csv` (cột `error_class`).
+
 ## §6. Bốn đường đi của trải nghiệm
 - Happy path: Học viên hỏi trúng nội dung slide -> AI trả lời súc tích kèm huy hiệu trích dẫn `[Trang N]`, click vào xem đoạn nguồn nguyên văn.
 - Low-confidence (②): Học viên bôi đen từ khóa ngắn/mơ hồ -> AI kích hoạt HAX G10 dừng lại hỏi 1 câu kèm 2 nút bấm lựa chọn để thu hẹp phạm vi.

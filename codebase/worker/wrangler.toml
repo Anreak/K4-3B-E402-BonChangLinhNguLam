@@ -1,0 +1,12 @@
+name = "vlearn-tutor-proxy"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+OPENROUTER_MODEL = "nex-agi/nex-n2.5-mini:free"
+# Sau khi biết URL GitHub Pages thật (vd. https://username.github.io), đổi "*" thành đúng origin đó
+# để chỉ trang của bạn mới gọi được proxy này.
+ALLOWED_ORIGIN = "*"
+
+# KHÔNG đặt OPENROUTER_API_KEY ở đây (file này commit lên git bình thường).
+# Set secret bằng lệnh: wrangler secret put OPENROUTER_API_KEY
