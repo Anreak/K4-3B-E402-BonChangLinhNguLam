@@ -4,13 +4,13 @@
 
 ## 👥 Thành viên nhóm & Phân công vai trò
 
-**Lớp:** 3B · **Phòng:** ____ · **Cụm:** ____ · **Track:** ____
+**Lớp:** 3B · **Phòng:** E402 · **Cụm:** ____ · **Track:** Track A — VLearn Tutor
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
 |Nguyễn Nhật Thăng | 2A202602727|  |  |
 |Nguyễn Quang Hữu | 2A202602756 |  |  |
-|Nguyễn Minh Quyền | 2A202602438|  |  |
+|Nguyễn Minh Quyền | 2A202602438|evidence + khảo sát  | Thu thập và phân tích evidence về vấn đề tutor thiếu citation; khảo sát/phỏng vấn willing users để xác thực pain point; tổng hợp nhu cầu và hành vi người học; xây dựng các case thực tế để làm cơ sở cho thiết kế và đánh giá giải pháp. |
 |Vương Việt Hoàng | 2A202602528 |  |  |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
