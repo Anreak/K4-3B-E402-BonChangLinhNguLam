@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLearn Tutor — Interactive Sequential Prototype</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-light: #eff6ff;
+      --bg-slate: #f8fafc;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-slate);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Navigation */
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .course-tag {
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Flow Control */
+    .flow-controller {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .step-indicator {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 5px 12px;
+      border-radius: 9999px;
+    }
+
+    .btn-next-step {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(37,99,235,0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-next-step:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      background: white;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+
+    .btn-reset:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    /* Main Workspace */
+    .main-workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 60px);
+      overflow: hidden;
+    }
+
+    /* Left Pane: Slide Carousel */
+    .slide-section {
+      flex: 1.15;
+      background: #cbd5e1;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-top-bar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      z-index: 10;
+    }
+
+    .slide-nav-arrows {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-arrow-btn {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.15s;
+    }
+
+    .nav-arrow-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .slide-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slides-wrapper {
+      width: 100%;
+      max-width: 660px;
+      height: 480px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.1);
+    }
+
+    .slides-ribbon {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide-item {
+      min-width: 100%;
+      height: 100%;
+      background: white;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .slide-badge {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+
+    .slide-heading {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 18px;
+    }
+
+    .slide-body {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #334155;
+    }
+
+    .slide-body p {
+      margin-bottom: 12px;
+    }
+
+    .slide-body ul {
+      margin-left: 22px;
+      margin-bottom: 14px;
+    }
+
+    .slide-body li {
+      margin-bottom: 6px;
+    }
+
+    .text-highlight {
+      background: #fef08a;
+      border-radius: 4px;
+      padding: 2px 4px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .text-highlight.active-glow {
+      background: #fde047;
+      box-shadow: 0 0 0 2.5px #eab308;
+    }
+
+    /* Carousel dots */
+    .dots-strip {
+      position: absolute;
+      bottom: 14px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      z-index: 10;
+    }
+
+    .dot-pill {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94a3b8;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .dot-pill.active {
+      background: var(--primary);
+      width: 22px;
+      border-radius: 9999px;
+    }
+
+    /* Right Pane: AI Tutor Chat */
+    .chat-section {
+      flex: 0.85;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .chat-header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+    }
+
+    .tutor-id {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tutor-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .chat-scroll {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Initial suggested prompts */
+    .starter-prompts {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .prompt-chip {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #1e293b;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .prompt-chip:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+      color: var(--primary-dark);
+      transform: translateX(3px);
+    }
+
+    /* Chat Messages */
+    .chat-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 90%;
+      animation: msgPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .chat-row.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .chat-row.user .msg-content {
+      background: var(--primary);
+      color: white;
+      border-radius: 14px 14px 2px 14px;
+    }
+
+    /* Context Attachment Tag for User Messages (Separate Note, not in the prompt itself) */
+    .user-context-note {
+      font-size: 0.73rem;
+      color: #64748b;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 3px 9px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      max-width: 95%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-context-note .note-page {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .chat-row.tutor {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .chat-row.tutor .msg-content {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: #0f172a;
+      border-radius: 14px 14px 14px 2px;
+    }
+
+    .msg-content {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    /* Interactive Citation tag — ONLY in AI answers */
+    .citation-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      font-weight: 700;
+      font-size: 0.76rem;
+      padding: 2px 7px;
+      border-radius: 5px;
+      margin: 0 3px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .citation-tag:hover {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      transform: scale(1.06);
+    }
+
+    /* HAX G10 Choice Card */
+    .g10-card {
+      margin-top: 10px;
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .g10-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .g10-option-btn {
+      width: 100%;
+      text-align: left;
+      background: white;
+      border: 1px solid #fde68a;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: #78350f;
+      cursor: pointer;
+      margin-bottom: 6px;
+      transition: all 0.15s;
+    }
+
+    .g10-option-btn:hover {
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+
+    /* Out of scope fallback */
+    .fail-card {
+      margin-top: 10px;
+      background: #fef2f2;
+      border: 1px solid #fee2e2;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.84rem;
+    }
+
+    .ta-discord-btn {
+      margin-top: 8px;
+      background: #5865f2;
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Message Action Buttons */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 5px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    .action-btn {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn:hover {
+      color: var(--primary);
+    }
+
+    /* Slide citation flyout notification */
+    .flyout-notice {
+      display: none;
+      position: absolute;
+      bottom: 80px;
+      left: 20px;
+      right: 20px;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 10px 20px -3px rgba(0,0,0,0.15);
+      z-index: 30;
+      animation: flyUp 0.2s ease-out;
+    }
+
+    @keyframes flyUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .flyout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.84rem;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .flyout-quote {
+      background: #f8fafc;
+      border-left: 3px solid var(--primary);
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: #334155;
+    }
+
+    /* Bottom Input Bar */
+    .chat-input-bar {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      background: white;
+    }
+
+    .context-tag-bar {
+      font-size: 0.74rem;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .input-flex {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-text {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .input-text:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-send-chat {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top LMS Header with Clean Sequential Flow Control -->
+  <header>
+    <div class="brand-group">
+      <div class="brand-title">
+        <span>⚡ VLearn Tutor</span>
+      </div>
+      <span class="course-tag">Day 01 — LLM Foundation</span>
+    </div>
+
+    <div class="flow-controller">
+      <span class="step-indicator" id="step-indicator">Bắt đầu · Slide Trang 1</span>
+      <button class="btn-reset" id="btn-reset" onclick="resetToBeginning()">Bắt đầu lại 🔄</button>
+      <button class="btn-next-step" id="btn-next" onclick="advanceStep()">
+        <span id="next-label">Bắt đầu / Tiếp tục</span> ➔
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="main-workspace">
+    <!-- Left Pane: Slide Deck with Smooth Sliding -->
+    <div class="slide-section">
+      <div class="slide-top-bar">
+        <div><strong>Tài liệu bài học:</strong> 5-day01-lecture-slides.pdf</div>
+        <div class="slide-nav-arrows">
+          <button class="nav-arrow-btn" onclick="slidePrev()">◀</button>
+          <span id="page-label" style="font-weight: 700; color: #1e293b; min-width: 60px; text-align: center;">Trang 1</span>
+          <button class="nav-arrow-btn" onclick="slideNext()">▶</button>
+        </div>
+      </div>
+
+      <div class="slide-stage">
+        <div class="slides-wrapper">
+          <div class="slides-ribbon" id="slides-ribbon">
+            
+            <!-- Slide 0: Trang 1 (Unrelated / Introduction) -->
+            <div class="slide-item" id="slide-item-0">
+              <div class="slide-badge">Trang 1 / 50</div>
+              <h2 class="slide-heading">Mục tiêu & Nền tảng LLM</h2>
+              <div class="slide-body">
+                <p>Chào mừng bạn đến với khóa học <strong>AI Engineering & Product</strong>. Trong ngày học đầu tiên, bạn sẽ làm quen với các khái niệm cốt lõi:</p>
+                <ul>
+                  <li><strong>Next-Token Prediction:</strong> Cơ chế dự đoán xác suất từ tiếp theo của các mô hình ngôn ngữ lớn.</li>
+                  <li><strong>Token Economy:</strong> Khái niệm về token, cách tính chi phí và độ trễ khi gọi model qua API.</li>
+                  <li><strong>Thực hành:</strong> Gọi mô hình GPT-4o, Claude 3.5 Sonnet và đo lường latency P90/P99.</li>
+                </ul>
+                <p><em>Hãy theo dõi slide và đặt câu hỏi cho AI Tutor nếu gặp khái niệm chưa rõ!</em></p>
+              </div>
+            </div>
+
+            <!-- Slide 1: Trang 5 (Transformer & Attention) -->
+            <div class="slide-item" id="slide-item-1">
+              <div class="slide-badge">Trang 5 / 50</div>
+              <h2 class="slide-heading">Kiến trúc Transformer & Self-Attention</h2>
+              <div class="slide-body">
+                <p>Trọng tâm kỹ thuật tạo nên sự đột phá của LLM nằm ở cơ chế <strong>Self-Attention</strong>:</p>
+                <p class="text-highlight" id="highlight-p5">
+                  "Cơ chế Self-Attention cho phép mô hình cân nhắc mối tương quan ngữ nghĩa giữa tất cả các từ trong câu đồng thời, loại bỏ điểm nghẽn xử lý tuần tự của các mạng RNN/LSTM cũ."
+                </p>
+                <ul>
+                  <li><strong>Multi-Head Attention:</strong> Chia không gian vector thành nhiều chiều quan sát độc lập.</li>
+                  <li><strong>Positional Encoding:</strong> Gắn thông tin vị trí vào từng token trước khi đưa vào khối xử lý.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Slide 2: Trang 7 (Token Economics) -->
+            <div class="slide-item" id="slide-item-2">
+              <div class="slide-badge">Trang 7 / 50</div>
+              <h2 class="slide-heading">Token Economics & Chi phí Inference</h2>
+              <div class="slide-body">
+                <p>Trong các sản phẩm AI thực tế, chi phí vận hành gắn liền trực tiếp với số lượng token:</p>
+                <p class="text-highlight" id="highlight-p7">
+                  "Chi phí của một lời gọi API thường được tính dựa trên số lượng Input Tokens và Output Tokens. Thông thường, giá của Output Tokens cao hơn Input Tokens từ 2 đến 4 lần do chi phí tính toán autoregressive sinh từng từ."
+                </p>
+                <ul>
+                  <li><strong>Input Tokens:</strong> Prompt câu hỏi, tài liệu ngữ cảnh RAG.</li>
+                  <li><strong>Output Tokens:</strong> Câu trả lời được mô hình sinh ra theo từng bước.</li>
+                  <li><strong>KV-Cache:</strong> Kỹ thuật đệm bộ nhớ giúp giảm thiểu tính toán lặp lại.</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Carousel dot indicators -->
+          <div class="dots-strip">
+            <span class="dot-pill active" id="dot-0" onclick="slideToIndex(0)"></span>
+            <span class="dot-pill" id="dot-1" onclick="slideToIndex(1)"></span>
+            <span class="dot-pill" id="dot-2" onclick="slideToIndex(2)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Pane: VLearn AI Tutor -->
+    <div class="chat-section">
+      <div class="chat-header">
+        <div class="tutor-id">
+          <div class="tutor-avatar">🤖</div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.92rem;">VLearn AI Tutor</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted);">Strict Citation & Grounding Active</div>
+          </div>
+        </div>
+        <span style="font-size: 0.7rem; background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 9999px; font-weight: 700; border: 1px solid #a7f3d0;">
+          Conditional Auto
+        </span>
+      </div>
+
+      <!-- Chat Scroll Area -->
+      <div class="chat-scroll" id="chat-scroll">
+        <!-- Injected dynamically based on current step -->
+      </div>
+
+      <!-- Flyout Source Inspector (HAX G11) -->
+      <div class="flyout-notice" id="flyout-box">
+        <div class="flyout-header">
+          <span id="flyout-title">🔍 Căn cứ trích dẫn từ Slide</span>
+          <button style="border:none; background:transparent; cursor:pointer; font-weight:700; color:#64748b;" onclick="closeFlyout()">✕</button>
+        </div>
+        <div class="flyout-quote" id="flyout-body">
+          Đoạn nguồn trích dẫn...
+        </div>
+        <div style="font-size: 0.72rem; color: #2563eb; font-weight:600; margin-top: 6px;">
+          ✓ Slide đã tự động trượt chuyển động tới trang nguồn tương ứng.
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-bar">
+        <div class="context-tag-bar" id="context-tag">
+          <span id="context-info">📌 Đang ở Trang 1 / Chưa chọn đoạn bôi đen</span>
+        </div>
+        <div class="input-flex">
+          <input type="text" class="input-text" id="chat-input-box" placeholder="Hỏi tutor về nội dung bài giảng...">
+          <button class="btn-send-chat" onclick="sendUserMessage()">Gửi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Slide index mapping: 0 -> Trang 1, 1 -> Trang 5, 2 -> Trang 7
+    const slidePages = [1, 5, 7];
+    let currentSlideIdx = 0; // Starts on Trang 1 (unrelated / intro)
+    let currentStep = 0; // 0 = Start, 1 = Happy Path (Slide 7), 2 = Cross-ref (Slide 5), 3 = Clarify (Slide 7), 4 = Out of scope
+
+    function slideToIndex(idx) {
+      if (idx < 0 || idx >= slidePages.length) return;
+      currentSlideIdx = idx;
+      const ribbon = document.getElementById('slides-ribbon');
+      ribbon.style.transform = `translateX(-${idx * 100}%)`;
+
+      // Update page text
+      document.getElementById('page-label').innerText = `Trang ${slidePages[idx]}`;
+
+      // Update dots
+      for (let i = 0; i < slidePages.length; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (dot) {
+          if (i === idx) dot.classList.add('active');
+          else dot.classList.remove('active');
+        }
+      }
+    }
+
+    function slidePrev() {
+      if (currentSlideIdx > 0) slideToIndex(currentSlideIdx - 1);
+    }
+
+    function slideNext() {
+      if (currentSlideIdx < slidePages.length - 1) slideToIndex(currentSlideIdx + 1);
+    }
+
+    function jumpToPage(pageNum) {
+      const idx = slidePages.indexOf(pageNum);
+      if (idx !== -1) slideToIndex(idx);
+    }
+
+    // Step-by-step state definition
+    function renderStep(step) {
+      currentStep = step;
+      const scroll = document.getElementById('chat-scroll');
+      const nextBtnLabel = document.getElementById('next-label');
+      const resetBtn = document.getElementById('btn-reset');
+      const stepIndicator = document.getElementById('step-indicator');
+      const contextInfo = document.getElementById('context-info');
+      const inputBox = document.getElementById('chat-input-box');
+
+      // Clear all active glows
+      document.querySelectorAll('.text-highlight').forEach(el => el.classList.remove('active-glow'));
+      closeFlyout();
+
+      if (step === 0) {
+        // Initial state: On Trang 1 (unrelated intro)
+        jumpToPage(1);
+        stepIndicator.innerText = "Khởi đầu · Slide Trang 1";
+        nextBtnLabel.innerText = "Bắt đầu học ➔";
+        resetBtn.style.display = "none";
+        contextInfo.innerText = "📌 Đang ở Trang 1 / Chưa chọn đoạn";
+        inputBox.value = "";
+
+        scroll.innerHTML = `
+          <div class="chat-row tutor">
+            <div class="msg-content">
+              Chào bạn! Mình là AI Tutor đồng hành cùng buổi học <strong>Day 01 (LLM Foundation)</strong>.<br><br>
+              Bạn có thể theo dõi bài giảng trên slide bên trái. Dưới đây là các câu hỏi gợi ý bạn có thể bấm thử, hoặc bấm nút <strong>"Bắt đầu học ➔"</strong> ở trên để xem luồng tương tác:
+            </div>
+          </div>
+          <div class="starter-prompts">
+            <div class="prompt-chip" onclick="triggerPreset(1)">
+              <span>💬 Tại sao Output Token lại đắt hơn Input Token?</span>
+              <span>➔</span>
+            </div>
+            <div class="prompt-chip" onclick="triggerPreset(2)">
+              <span>💬 Cơ chế Self-Attention hoạt động như thế nào?</span>
+              <span>➔</span>
+            </div>
+            <div class="prompt-chip" onclick="triggerPreset(3)">
+              <span>💬 Cái này dùng để làm gì?</span>
+              <span>➔</span>
+            </div>
+            <div class="prompt-chip" onclick="triggerPreset(4)">
+              <span>💬 Lịch thi Hackathon ngày mai mấy giờ?</span>
+              <span>➔</span>
+            </div>
+          </div>
+        `;
+      } else if (step === 1) {
+        // Step 1: Slide moves to Page 7 (Token Economics) with smooth transition
+        jumpToPage(7);
+        stepIndicator.innerText = "Bước 1/4: Happy Path (Căn cứ [Trang 7])";
+        nextBtnLabel.innerText = "Tiếp theo (Trang 5)";
+        resetBtn.style.display = "inline-block";
+        contextInfo.innerText = '📌 Đang chọn: "Chi phí của một lời gọi API..." [Trang 7]';
+
+        // Highlight snippet on Page 7
+        setTimeout(() => {
+          const h7 = document.getElementById('highlight-p7');
+          if (h7) h7.classList.add('active-glow');
+        }, 300);
+
+        scroll.innerHTML += `
+          <div class="chat-row user">
+            <div class="user-context-note">
+              <span>📎 Đoạn đính kèm:</span>
+              <span class="note-page">[Trang 7]</span>
+              <span>"Chi phí của một lời gọi API thường được tính..."</span>
+            </div>
+            <div class="msg-content">
+              Tại sao Output Token lại đắt hơn Input Token?
+            </div>
+          </div>
+          <div class="chat-row tutor">
+            <div class="msg-content">
+              Theo tài liệu bài giảng <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>, <strong>Output Token đắt hơn Input Token từ 2 đến 4 lần</strong> vì 2 nguyên nhân cốt lõi:<br><br>
+              1. <strong>Cơ chế Autoregressive:</strong> Khi sinh output, mô hình phải tính toán tuần tự từng token một, không thể song song hóa hoàn toàn như khi nạp Input prompt <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>.<br>
+              2. <strong>Chi phí KV-Cache:</strong> Hệ thống phải lưu đệm trạng thái bộ nhớ GPU liên tục cho tới khi kết thúc sinh văn bản.
+            </div>
+            <div class="row-actions">
+              <span class="action-btn" onclick="editInputPrompt()">✏️ Sửa câu hỏi (HAX G9)</span>
+              <span class="action-btn" onclick="showFlyout(7)">🔍 Xem nguồn [Trang 7]</span>
+            </div>
+          </div>
+        `;
+        scroll.scrollTop = scroll.scrollHeight;
+      } else if (step === 2) {
+        // Step 2: Slide moves smoothly to Page 5 (Self-Attention)
+        jumpToPage(5);
+        stepIndicator.innerText = "Bước 2/4: Lật trang [Trang 5] đối chiếu";
+        nextBtnLabel.innerText = "Tiếp theo (Câu hỏi mơ hồ)";
+        contextInfo.innerText = '📌 Đang chọn: "Cơ chế Self-Attention cho phép..." [Trang 5]';
+
+        setTimeout(() => {
+          const h5 = document.getElementById('highlight-p5');
+          if (h5) h5.classList.add('active-glow');
+        }, 300);
+
+        scroll.innerHTML += `
+          <div class="chat-row user">
+            <div class="user-context-note">
+              <span>📎 Đoạn đính kèm:</span>
+              <span class="note-page">[Trang 5]</span>
+              <span>"Cơ chế Self-Attention cho phép mô hình..."</span>
+            </div>
+            <div class="msg-content">
+              Cơ chế Self-Attention giải quyết vấn đề gì của mạng tuần tự cũ?
+            </div>
+          </div>
+          <div class="chat-row tutor">
+            <div class="msg-content">
+              Tại slide <span class="citation-tag" onclick="showFlyout(5)">[Trang 5]</span>, giảng viên giải thích: <strong>Self-Attention tính toán mối tương quan của mọi cặp từ trong câu đồng thời</strong>, loại bỏ điểm nghẽn phải truyền dữ liệu tuần tự từng bước của RNN/LSTM cũ, nhờ đó xử lý được ngữ cảnh rất dài mà không bị mất mát thông tin.
+            </div>
+            <div class="row-actions">
+              <span class="action-btn" onclick="editInputPrompt()">✏️ Sửa câu hỏi</span>
+              <span class="action-btn" onclick="showFlyout(5)">🔍 Đối chiếu [Trang 5]</span>
+            </div>
+          </div>
+        `;
+        scroll.scrollTop = scroll.scrollHeight;
+      } else if (step === 3) {
+        // Step 3: Slide moves back to Page 7, handles vague question with HAX G10
+        jumpToPage(7);
+        stepIndicator.innerText = "Bước 3/4: HAX G10 (Thu hẹp khi mơ hồ)";
+        nextBtnLabel.innerText = "Tiếp theo (Hỏi ngoài bài)";
+        contextInfo.innerText = '📌 Đang chọn đoạn ngắn: "Tokens" [Trang 7]';
+
+        setTimeout(() => {
+          const h7 = document.getElementById('highlight-p7');
+          if (h7) h7.classList.add('active-glow');
+        }, 300);
+
+        scroll.innerHTML += `
+          <div class="chat-row user">
+            <div class="user-context-note">
+              <span>📎 Đoạn đính kèm:</span>
+              <span class="note-page">[Trang 7]</span>
+              <span>"Tokens"</span>
+            </div>
+            <div class="msg-content">
+              Cái này dùng để làm gì?
+            </div>
+          </div>
+          <div class="chat-row tutor">
+            <div class="msg-content">
+              Đoạn bạn chọn ở <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span> đề cập đến cả <em>khái niệm đơn vị Token</em> và <em>cách tính chi phí gọi API</em>. Vì câu hỏi ngắn, để giải thích đúng nhu cầu của bạn:
+              <div class="g10-card">
+                <div class="g10-title">⚡ HAX G10: Thu hẹp phạm vi — Bạn muốn tìm hiểu hướng nào?</div>
+                <button class="g10-option-btn" onclick="chooseClarify(1)">👉 1. Cách mô hình tách từ ngữ thành Token (Khái niệm cơ bản)</button>
+                <button class="g10-option-btn" onclick="chooseClarify(2)">👉 2. Cách tính chi phí gọi API theo đơn vị USD/MToK (Token Economics)</button>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="action-btn" onclick="editInputPrompt()">✏️ Gõ câu hỏi cụ thể hơn</span>
+            </div>
+          </div>
+        `;
+        scroll.scrollTop = scroll.scrollHeight;
+      } else if (step === 4) {
+        // Step 4: Out of scope inquiry -> Graceful failure (No attached context note)
+        stepIndicator.innerText = "Bước 4/4: PAIR Graceful Failure (Từ chối an toàn)";
+        nextBtnLabel.innerText = "Hoàn thành / Xem lại 🔄";
+        contextInfo.innerText = "📌 Câu hỏi không nằm trong tài liệu bài giảng";
+
+        scroll.innerHTML += `
+          <div class="chat-row user">
+            <div class="msg-content">
+              Lịch thi Hackathon ngày mai mấy giờ và thi ở phòng nào?
+            </div>
+          </div>
+          <div class="chat-row tutor">
+            <div class="msg-content">
+              Rất tiếc, tài liệu bài giảng <strong>Day 01</strong> không chứa thông tin về lịch thi hay số phòng. AI Tutor chỉ trả lời khi có căn cứ trong bài học để tránh thông tin sai lệch.
+              <div class="fail-card">
+                <div style="font-weight:700; color:#991b1b; margin-bottom:4px;">Thông tin ngoài tài liệu bài giảng</div>
+                <div>Để nhận thông báo chính xác từ ban tổ chức:</div>
+                <button class="ta-discord-btn" onclick="alert('Đang mở liên kết kênh #ask-ta trên Discord của lớp!')">
+                  💬 Chuyển câu hỏi cho TA trên Discord
+                </button>
+              </div>
+            </div>
+            <div class="row-actions">
+              <span class="action-btn" onclick="resetToBeginning()">🔄 Bắt đầu lại từ Bước 1</span>
+            </div>
+          </div>
+        `;
+        scroll.scrollTop = scroll.scrollHeight;
+      }
+    }
+
+    function advanceStep() {
+      if (currentStep < 4) {
+        renderStep(currentStep + 1);
+      } else {
+        renderStep(0);
+      }
+    }
+
+    function resetToBeginning() {
+      renderStep(0);
+    }
+
+    function triggerPreset(stepTarget) {
+      renderStep(stepTarget);
+    }
+
+    // Citation interaction: jumps slide and displays flyout
+    function showFlyout(pageNum) {
+      jumpToPage(pageNum);
+      const flyout = document.getElementById('flyout-box');
+      const fTitle = document.getElementById('flyout-title');
+      const fBody = document.getElementById('flyout-body');
+
+      fTitle.innerText = `🔍 Căn cứ trích dẫn: Slide Trang ${pageNum}`;
+      if (pageNum === 7) {
+        fBody.innerText = 'Đoạn nguồn Trang 7: "Chi phí của một lời gọi API thường được tính dựa trên số lượng Input Tokens và Output Tokens. Thông thường, giá của Output Tokens cao hơn Input Tokens từ 2 đến 4 lần do chi phí tính toán autoregressive sinh từng từ."';
+        const h7 = document.getElementById('highlight-p7');
+        if (h7) h7.classList.add('active-glow');
+      } else if (pageNum === 5) {
+        fBody.innerText = 'Đoạn nguồn Trang 5: "Cơ chế Self-Attention cho phép mô hình cân nhắc mối tương quan ngữ nghĩa giữa tất cả các từ trong câu đồng thời, loại bỏ điểm nghẽn xử lý tuần tự của các mạng RNN/LSTM cũ."';
+        const h5 = document.getElementById('highlight-p5');
+        if (h5) h5.classList.add('active-glow');
+      } else {
+        fBody.innerText = 'Đoạn nguồn Trang 1: "Next-Token Prediction: Cơ chế dự đoán xác suất từ tiếp theo của các mô hình ngôn ngữ lớn."';
+      }
+      flyout.style.display = 'block';
+    }
+
+    function closeFlyout() {
+      document.getElementById('flyout-box').style.display = 'none';
+    }
+
+    function chooseClarify(choice) {
+      const scroll = document.getElementById('chat-scroll');
+      const text = (choice === 1) 
+        ? "Mình muốn tìm hiểu cách phân rã từ ngữ thành Token." 
+        : "Mình muốn tìm hiểu cách tính chi phí API theo USD/MToK.";
+
+      scroll.innerHTML += `
+        <div class="chat-row user">
+          <div class="msg-content">${text}</div>
+        </div>
+        <div class="chat-row tutor">
+          <div class="msg-content">
+            Cảm ơn bạn đã làm rõ! Theo nội dung tại <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>: Chi phí được tính theo đơn vị Token vì LLM không đọc ký tự hay từ nguyên bản mà ánh xạ văn bản thành vector số đại diện. Việc tính tiền theo output token giúp nhà cung cấp bù đắp tài nguyên GPU phục vụ quá trình sinh từ tuần tự.
+          </div>
+        </div>
+      `;
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function editInputPrompt() {
+      const box = document.getElementById('chat-input-box');
+      box.focus();
+    }
+
+    function sendUserMessage() {
+      const box = document.getElementById('chat-input-box');
+      const val = box.value.trim();
+      if (!val) return;
+
+      const scroll = document.getElementById('chat-scroll');
+      scroll.innerHTML += `
+        <div class="chat-row user">
+          <div class="msg-content">${val}</div>
+        </div>
+        <div class="chat-row tutor">
+          <div class="msg-content">
+            Theo bài giảng tại <span class="citation-tag" onclick="showFlyout(${slidePages[currentSlideIdx]})">[Trang ${slidePages[currentSlideIdx]}]</span>, câu trả lời cho nội dung bạn vừa hỏi đã được đối chiếu trực tiếp với tài liệu buổi học.
+          </div>
+        </div>
+      `;
+      box.value = '';
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    // Initialize in clean Step 0
+    window.onload = function() {
+      renderStep(0);
+    };
+  </script>
+</body>
+</html>

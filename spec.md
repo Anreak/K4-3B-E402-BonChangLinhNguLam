@@ -40,18 +40,34 @@ Loại: [x] Tối ưu tính năng có sẵn  [ ] Tính năng mới
 
 ## §4. Thiết kế
 - Lát cắt MỘT CÂU (1 user · 1 việc · 1 quyết định AI · 1 kết quả):
+  Một học viên hỏi về khái niệm/lab đang mở; hệ thống quyết định `ANSWER_WITH_CITE` / `CLARIFY` / `OUT_OF_SCOPE`; nếu có căn cứ thì trả lời kèm đúng mã trang `[trang N]`; học viên đối chiếu và nắm bài ngay.
 - Non-goals (≥3 thứ KHÔNG build):
-- Mức prototype nhắm tới: [ ] Sketch [ ] Mock [ ] Working — phần nào mock, phần nào thật:
-- Automation: [ ] augment [ ] conditional [ ] automate — lý do theo cost-of-error:
+  1. Không build giao diện đọc slide mới (dùng lại khung VLearn hiện có).
+  2. Không cố trả lời kiến thức mở ngoài bài học nếu slide/transcript không đề cập.
+  3. Không tự giải hộ toàn bộ bài tập/code lab cho học viên.
+- Mức prototype nhắm tới: [ ] Sketch [x] Mock [ ] Working — phần nào mock, phần nào thật:
+  Phần mock: giao diện hiển thị tài liệu/slide bài học; phần thật: luồng logic quyết định AI, trích xuất căn cứ và hiển thị 4 đường đi tương tác trong `prototype/index.html`.
+- Automation: [ ] augment [x] conditional [ ] automate — lý do theo cost-of-error:
+  Conditional: AI tự trả lời khi tìm được đoạn trích dẫn đủ chắc; từ chối và hỏi lại khi thiếu căn cứ trong bài giảng. Lý do: kiến thức sai trong học tập có chi phí sửa chữa rất đắt (làm sai lab, mất điểm thi, mất niềm tin vào hệ thống).
 - §4b. Nguyên tắc đã áp dụng (≥4 — HAX/PAIR, xem guide):
   | Nguyên tắc | Áp cụ thể vào đâu trong prototype |
   |---|---|
+  | HAX G2 (Làm rõ mức độ tin cậy) | Gắn nhãn trích dẫn `[Trang N]` màu xanh dương ngay cạnh luận điểm câu trả lời |
+  | HAX G10 (Thu hẹp phạm vi khi nghi ngờ) | Hộp thoại gợi ý màu vàng (`.clarification-box`) hiển thị 2 lựa chọn định hướng khi câu hỏi mơ hồ |
+  | HAX G11 (Giải thích vì sao) | Hộp popover xem nguồn (`#citation-popover`) hiển thị đoạn trích dẫn nguyên văn khi click vào `[Trang N]` |
+  | HAX G9 (Sửa dễ dàng) | Nút "✏️ Sửa câu hỏi" gắn trực tiếp dưới chân từng tin nhắn trả lời |
+  | HAX G8 (Gạt bỏ dễ dàng) | Nút "Bỏ qua & quay lại bài học" khi nhận thông báo từ chối ngoài phạm vi |
+  | PAIR Graceful Failure | Nút "💬 Chuyển câu hỏi cho TA trên Discord" khi không tìm thấy nguồn trong bài |
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản (≥8) [bảng theo guide §2.5]
 
 ## §6. Bốn đường đi của trải nghiệm
-- Happy path: · Low-confidence (②): · Failure/không căn cứ (①): · Correction (user sửa):
-- Khi bị đòi ngoài phạm vi (③): · Case đặc thù domain (④):
+- Happy path: Học viên hỏi trúng nội dung slide -> AI trả lời súc tích kèm huy hiệu trích dẫn `[Trang N]`, click vào xem đoạn nguồn nguyên văn.
+- Low-confidence (②): Học viên bôi đen từ khóa ngắn/mơ hồ -> AI kích hoạt HAX G10 dừng lại hỏi 1 câu kèm 2 nút bấm lựa chọn để thu hẹp phạm vi.
+- Failure/không căn cứ (①): Học viên hỏi ngoài bài giảng -> AI kích hoạt PAIR Graceful Failure thông báo chưa đủ căn cứ + cung cấp nút chuyển câu hỏi sang TA trên Discord.
+- Correction (user sửa): Học viên có thể bấm "✏️ Sửa câu hỏi" ngay trên bong bóng chat để điều chỉnh câu hỏi mà không mất ngữ cảnh bài học.
+- Khi bị đòi ngoài phạm vi (③): Từ chối lịch sự, nêu rõ giới hạn bài học và hướng dẫn liên hệ giảng viên/TA.
+- Case đặc thù domain (④): Cảnh báo nếu câu hỏi liên quan đến code/lab nhạy cảm hoặc vi phạm an toàn bài thi.
 
 ## §7. Kiểm thử
 - Chiều chất lượng + định nghĩa kiểm chứng được:
