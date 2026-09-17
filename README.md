@@ -8,7 +8,7 @@
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-|Nguyễn Nhật Thăng | 2A202602727|  |  |
+|Nguyễn Nhật Thăng | 2A202602727| prompt/AI call | thiết kế system prompt phân loại 3 nhánh, code gọi API thật và test thử bằng golden set |
 |Nguyễn Quang Hữu | 2A202602756 |  |  |
 |Nguyễn Minh Quyền | 2A202602438|evidence + khảo sát  | Thu thập và phân tích evidence về vấn đề tutor thiếu citation; khảo sát/phỏng vấn willing users để xác thực pain point; tổng hợp nhu cầu và hành vi người học; xây dựng các case thực tế để làm cơ sở cho thiết kế và đánh giá giải pháp. |
 |Vương Việt Hoàng | 2A202602528 |  |  |
