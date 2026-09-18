@@ -9,7 +9,7 @@
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
 | Nguyễn Nhật Thăng | 2A202602727 | prompt/AI call & demo | Thiết kế system prompt phân loại 3 nhánh JSON, code Cloudflare Worker proxy (`worker.js`) gọi OpenRouter API, tích hợp UI và quay video demo CP3 |
-| Nguyễn Quang Hữu | 2A202602756 | Đội trưởng · spec + canvas | Chịu trách nhiệm kiến trúc tài liệu AI Spec (§1-§9), xây dựng canvas CP1, chuẩn hóa lát cắt 1 câu, đối chiếu tiêu chuẩn Rubric R1-R7 và điều phối tiến độ các checkpoint |
+| Nguyễn Quang Hữu | 2A202602756 | Đội trưởng · spec + canvas | Chịu trách nhiệm kiến trúc tài liệu AI Spec, xây dựng canvas CP1, chuẩn hóa lát cắt 1 câu, đối chiếu tiêu chuẩn Rubric R1-R7 và điều phối tiến độ các checkpoint |
 | Nguyễn Minh Quyền | 2A202602438 | evidence + khảo sát | Thu thập và phân tích evidence về vấn đề tutor thiếu citation từ 13.494 lượt chatlog `TutorTurns.csv`; khảo sát/phỏng vấn willing users để xác thực pain point; tổng hợp nhu cầu và hành vi người học; xây dựng các case thực tế |
 | Vương Việt Hoàng | 2A202602528 | eval + validation | Xây dựng bộ Golden Set 20 case phân bổ đủ 4 lớp lỗi khó, thực hiện chạy đo lường kiểm thử Lượt 1 (đạt 90%), phân tích nguyên nhân các case thất bại và thiết kế kịch bản phỏng vấn validation với willing users |
 
