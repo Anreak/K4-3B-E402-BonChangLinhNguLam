@@ -1,3 +1,4 @@
 codebase/config.js
 codebase/worker/.wrangler/
 codebase/.env
+codebase/worker/.dev.vars
