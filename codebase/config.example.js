@@ -1,2 +1,2 @@
-// URL của Cloudflare Worker proxy (xem worker/worker.js) — KHÔNG chứa API key thật.
+// URL của Cloudflare Worker proxy (xem worker/worker.js)
 const WORKER_URL = "";
