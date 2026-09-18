@@ -1,2 +1,3 @@
 codebase/config.js
 codebase/worker/.wrangler/
+codebase/.env
