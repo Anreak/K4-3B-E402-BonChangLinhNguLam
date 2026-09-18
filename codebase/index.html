@@ -252,18 +252,6 @@
       margin-bottom: 6px;
     }
 
-    .slide-takeaway {
-      margin-top: 14px;
-      background: #fbbf24;
-      color: #1f2937;
-      font-weight: 700;
-      font-size: 0.86rem;
-      line-height: 1.5;
-      text-align: center;
-      padding: 10px 16px;
-      border-radius: 8px;
-    }
-
     .text-highlight {
       background: #fef08a;
       border-radius: 4px;
@@ -280,29 +268,27 @@
     /* Carousel dots */
     .dots-strip {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
+      bottom: 14px;
+      left: 0;
+      right: 0;
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 5px;
+      gap: 7px;
       z-index: 10;
     }
 
     .dot-pill {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #94a3b8;
       cursor: pointer;
       transition: all 0.25s;
-      flex-shrink: 0;
     }
 
     .dot-pill.active {
       background: var(--primary);
-      width: 16px;
+      width: 22px;
       border-radius: 9999px;
     }
 
@@ -670,7 +656,7 @@
     <!-- Left Pane: Slide Deck with Smooth Sliding -->
     <div class="slide-section">
       <div class="slide-top-bar">
-        <div><strong>Tài liệu bài học:</strong> d1-slide-hackathon.pdf — 15/29 trang chọn lọc (AI &amp; LLM Foundation)</div>
+        <div><strong>Tài liệu bài học:</strong> 5-day01-lecture-slides.pdf</div>
         <div class="slide-nav-arrows">
           <button class="nav-arrow-btn" onclick="slidePrev()">◀</button>
           <span id="page-label" style="font-weight: 700; color: #1e293b; min-width: 60px; text-align: center;">Trang 1</span>
@@ -681,120 +667,69 @@
       <div class="slide-stage">
         <div class="slides-wrapper">
           <div class="slides-ribbon" id="slides-ribbon">
-
-<div class="slide-item" id="slide-item-0">
-              <div class="slide-badge">Trang 1 · 1/15</div>
-              <h2 class="slide-heading">AI &amp; LLM Foundation</h2>
+            
+            <!-- Slide 0: Trang 1 (Unrelated / Introduction) -->
+            <div class="slide-item" id="slide-item-0">
+              <div class="slide-badge">Trang 1 / 50</div>
+              <h2 class="slide-heading">Mục tiêu & Nền tảng LLM</h2>
               <div class="slide-body">
-                <p>Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?</p>
-                <div class="slide-takeaway">Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-1">
-              <div class="slide-badge">Trang 3 · 2/15</div>
-              <h2 class="slide-heading">AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?</h2>
-              <div class="slide-body">
+                <p>Chào mừng bạn đến với khóa học <strong>AI Engineering & Product</strong>. Trong ngày học đầu tiên, bạn sẽ làm quen với các khái niệm cốt lõi:</p>
                 <ul>
-                  <li>AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố "thông minh".</li>
-                  <li>Machine learning — học từ dữ liệu thay vì viết luật tay.</li>
-                  <li>Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng.</li>
-                  <li>Generative AI — sinh nội dung mới: văn bản, ảnh, code.</li>
-                  <li>LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.</li>
+                  <li><strong>Next-Token Prediction:</strong> Cơ chế dự đoán xác suất từ tiếp theo của các mô hình ngôn ngữ lớn.</li>
+                  <li><strong>Token Economy:</strong> Khái niệm về token, cách tính chi phí và độ trễ khi gọi model qua API.</li>
+                  <li><strong>Thực hành:</strong> Gọi mô hình GPT-4o, Claude 3.5 Sonnet và đo lường latency P90/P99.</li>
                 </ul>
-                <div class="slide-takeaway">LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay. Thứ tự từ rộng đến hẹp: Artificial Intelligence ⊃ Machine Learning ⊃ Deep Learning ⊃ Generative AI ⊃ LLM (GPT · Claude · Kimi).</div>
+                <p><em>Hãy theo dõi slide và đặt câu hỏi cho AI Tutor nếu gặp khái niệm chưa rõ!</em></p>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-2">
-              <div class="slide-badge">Trang 4 · 3/15</div>
-              <h2 class="slide-heading">Ba nhóm AI chính: phân loại · sinh nội dung · hành động</h2>
+            <!-- Slide 1: Trang 5 (Transformer & Attention) -->
+            <div class="slide-item" id="slide-item-1">
+              <div class="slide-badge">Trang 5 / 50</div>
+              <h2 class="slide-heading">Kiến trúc Transformer & Self-Attention</h2>
               <div class="slide-body">
+                <p>Trọng tâm kỹ thuật tạo nên sự đột phá của LLM nằm ở cơ chế <strong>Self-Attention</strong>:</p>
+                <p class="text-highlight" id="highlight-p5">
+                  "Cơ chế Self-Attention cho phép mô hình cân nhắc mối tương quan ngữ nghĩa giữa tất cả các từ trong câu đồng thời, loại bỏ điểm nghẽn xử lý tuần tự của các mạng RNN/LSTM cũ."
+                </p>
                 <ul>
-                  <li>Discriminative AI: giỏi phân loại, dự đoán — lọc spam, phát hiện gian lận, nhận diện ảnh. Input → một nhãn, một con số.</li>
-                  <li>Generative AI: sinh ra thứ mới — văn bản, ảnh, code. ChatGPT, Claude, Midjourney. Prompt → nội dung mới.</li>
-                  <li>Agentic AI: nhận mục tiêu rồi tự làm nhiều bước — lập kế hoạch, dùng công cụ, hành động. Goal → Plan → Action.</li>
+                  <li><strong>Multi-Head Attention:</strong> Chia không gian vector thành nhiều chiều quan sát độc lập.</li>
+                  <li><strong>Positional Encoding:</strong> Gắn thông tin vị trí vào từng token trước khi đưa vào khối xử lý.</li>
                 </ul>
-                <div class="slide-takeaway">LLM là engine chung của cả Generative lẫn Agentic — cuối buổi sáng mình sẽ thấy agent khác LLM ở đâu.</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-3">
-              <div class="slide-badge">Trang 5 · 4/15</div>
-              <h2 class="slide-heading">Lịch sử AI 70 năm</h2>
+            <!-- Slide 2: Trang 7 (Token Economics) -->
+            <div class="slide-item" id="slide-item-2">
+              <div class="slide-badge">Trang 7 / 50</div>
+              <h2 class="slide-heading">Token Economics & Chi phí Inference</h2>
               <div class="slide-body">
+                <p>Trong các sản phẩm AI thực tế, chi phí vận hành gắn liền trực tiếp với số lượng token:</p>
+                <p class="text-highlight" id="highlight-p7">
+                  "Chi phí của một lời gọi API thường được tính dựa trên số lượng Input Tokens và Output Tokens. Thông thường, giá của Output Tokens cao hơn Input Tokens từ 2 đến 4 lần do chi phí tính toán autoregressive sinh từng từ."
+                </p>
                 <ul>
-                  <li>1956 — Dartmouth Workshop: khai sinh, lời hứa đầu tiên.</li>
-                  <li>1966–1993 — hai lần mùa đông AI, cách tiếp cận chạm trần (Perceptrons 1969, báo cáo Lighthill 1973, hệ chuyên gia 1980, sụp đổ Lisp machine 1987).</li>
-                  <li>2006 — Deep Learning; 2012 — AlexNet; 2016 — AlphaGo; 2017 — Transformer; 2018 — GPT-1/BERT; 2022 — ChatGPT; 2024 — Kỷ nguyên Agent; 2026 — hiện tại.</li>
+                  <li><strong>Input Tokens:</strong> Prompt câu hỏi, tài liệu ngữ cảnh RAG.</li>
+                  <li><strong>Output Tokens:</strong> Câu trả lời được mô hình sinh ra theo từng bước.</li>
+                  <li><strong>KV-Cache:</strong> Kỹ thuật đệm bộ nhớ giúp giảm thiểu tính toán lặp lại.</li>
                 </ul>
-                <div class="slide-takeaway">70 năm lịch sử AI: từ Dartmouth Workshop 1956, qua hai lần mùa đông AI (cách tiếp cận chạm trần), đến Deep Learning 2006, Transformer 2017, ChatGPT 2022 — từ model đơn lẻ sang system có khả năng hành động như agent.</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-4">
-              <div class="slide-badge">Trang 10 · 5/15</div>
-              <h2 class="slide-heading">LLM là gì? — một bộ não nền, không phải một chatbot</h2>
-              <div class="slide-body">
-                <p>LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh.</p>
-                <p>Nhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì mỗi việc train một model riêng, cùng một model làm được rất nhiều việc.</p>
-                <p>Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài.</p>
-                <ul>
-                  <li>Chatbot · Tóm tắt tài liệu · Viết code · Dịch &amp; phân tích — tất cả dùng chung 1 model nền (LLM).</li>
-                </ul>
-                <div class="slide-takeaway">LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài. LLM = bộ não ngôn ngữ dùng chung cho mọi việc.</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-5">
-              <div class="slide-badge">Trang 11 · 6/15</div>
-              <h2 class="slide-heading">Bên trong Transformer: đầu ra luôn là một phân bố xác suất</h2>
-              <div class="slide-body">
-                <p>Ví dụ: "Behold, a wild pi creature, foraging in its native ___" — model chấm điểm MỌI từ trong từ vựng: "land" 22%, "forest" 9%, "country" 5%... rồi chọn theo xác suất đó.</p>
-                <div class="slide-takeaway">Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — "land" 22%, "forest" 9%... — rồi chọn theo xác suất đó. (Transformers, the tech behind LLMs - 3Blue1Brown)</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-6">
-              <div class="slide-badge">Trang 13 · 7/15</div>
-              <h2 class="slide-heading">Token: model không đọc "từ", model đọc mảnh chữ</h2>
-              <div class="slide-body">
-                <p>Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token: có từ là một mảnh, có từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng cũng là mảnh.</p>
-                <ul>
-                  <li>Ví dụ: "Hello world" ≈ 2 token, nhưng "Xin chào" có thể tới 3–4 token.</li>
-                  <li>Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra.</li>
-                </ul>
-                <div class="slide-takeaway">Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra. Mọi thứ model làm đều quy ra token — và mỗi token đều có giá.</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-7">
-              <div class="slide-badge">Trang 14 · 8/15</div>
+            <!-- Slide 3: Trang 14 (Context) — nội dung THẬT, trích từ d1-slide-hackathon.pdf -->
+            <div class="slide-item" id="slide-item-3">
+              <div class="slide-badge">Trang 14 / 29 · thật</div>
               <h2 class="slide-heading">Context: bàn làm việc có hạn của model</h2>
               <div class="slide-body">
                 <p>Mỗi lần trả lời, model chỉ nhìn được một lượng chữ có hạn — gọi là context. Hãy hình dung một bàn làm việc: mọi thứ muốn model "thấy" phải bày lên bàn.</p>
                 <p>Quy đổi: 128K token ≈ một cuốn sách 300 trang; 1M token ≈ 4–5 cuốn sách trên bàn cùng lúc.</p>
                 <p>Bàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót — đặt điều quan trọng ở giữa một prompt rất dài, model có thể "quên" mất.</p>
-                <div class="slide-takeaway">Context càng dài càng tốn tiền và càng chậm — bàn rộng không có nghĩa là dùng tốt. Quy đổi: 128K token ≈ một cuốn sách 300 trang; 1M token ≈ 4–5 cuốn sách trên bàn cùng lúc. (Hiện tượng "quên phần giữa": Liu et al. 2023, "Lost in the Middle")</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-8">
-              <div class="slide-badge">Trang 15 · 9/15</div>
-              <h2 class="slide-heading">Attention: mỗi từ được "nhìn sang" những từ quan trọng khác</h2>
-              <div class="slide-body">
-                <p>Thay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token:</p>
-                <ul>
-                  <li>Chủ động "quay đầu" nhìn lại các token trước đó trong câu.</li>
-                  <li>Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình.</li>
-                  <li>Khóa nghĩa theo ngữ cảnh — "nó" là quyển sách hay cái túi, tùy theo nó chú ý vào từ nào.</li>
-                </ul>
-                <div class="slide-takeaway">Đây chính là chữ T trong GPT — và là lý do model hiểu ngữ cảnh tốt hơn hẳn các thế hệ trước. (Attention in transformers, step-by-step - 3Blue1Brown)</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-9">
-              <div class="slide-badge">Trang 17 · 10/15</div>
+            <!-- Slide 4: Trang 17 (Tham số) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-4">
+              <div class="slide-badge">Trang 17 / 29 · thật</div>
               <h2 class="slide-heading">Tham số (parameter): những "khớp nối" model học được</h2>
               <div class="slide-body">
                 <p>Sau khi luyện xong, những gì model "biết" nằm trong các con số cố định bên trong gọi là tham số — hãy hình dung như khớp nối thần kinh: luyện càng kỹ, các khớp nối càng được siết đúng.</p>
@@ -803,67 +738,67 @@
                   <li>2020 — GPT-3: 175 tỷ tham số, một "bác sĩ đa năng" — mọi token đều đi qua toàn bộ khớp nối (dense).</li>
                   <li>2026 — Kimi K3: 2.800 tỷ tham số, một "bệnh viện đa khoa" — mỗi token chỉ gọi vài chuyên gia (MoE).</li>
                 </ul>
-                <div class="slide-takeaway">Nhiều tham số không đồng nghĩa tốn hơn tuyến tính — nhờ MoE, bệnh viện lớn gấp 16 lần mà chi phí mỗi ca khám gần như không đổi. 2020 GPT-3: 175 tỷ tham số (dense). 2026 Kimi K3: ~2.800 tỷ tham số (MoE).</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-10">
-              <div class="slide-badge">Trang 18 · 11/15</div>
-              <h2 class="slide-heading">LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề</h2>
-              <div class="slide-body">
-                <ul>
-                  <li>① Pre-training — "đọc cả thư viện": học tiếng nói và kiến thức từ hàng nghìn tỷ token.</li>
-                  <li>② SFT — "được chỉ cách trả lời": học theo ví dụ mẫu để ra dáng trợ lý.</li>
-                  <li>③ RLHF/DPO — "được uốn nắn": học theo phản hồi con người, an toàn và dễ chịu hơn.</li>
-                  <li>④ Luyện suy luận (từ ~2025) — "giải đề tự chấm": luyện toán/code có đáp án kiểm chứng được, model biết làm nháp trước khi trả lời.</li>
-                </ul>
-                <div class="slide-takeaway">Đọc vạn cuốn sách chưa chắc biết trả lời phỏng vấn — đó là lý do cần bước SFT, RLHF/DPO, luyện suy luận sau Pre-training.</div>
-              </div>
-            </div>
-
-<div class="slide-item" id="slide-item-11">
-              <div class="slide-badge">Trang 20 · 12/15</div>
+            <!-- Slide 5: Trang 20 (Giới hạn bẩm sinh) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-5">
+              <div class="slide-badge">Trang 20 / 29 · thật</div>
               <h2 class="slide-heading">Giới hạn bẩm sinh: học giả trong bong bóng</h2>
               <div class="slide-body">
                 <ul>
-                  <li>Bong bóng thời gian: model bị "đóng băng" tại ngày ngừng đọc — chuyện sau đó nó không biết trừ khi bạn cung cấp thêm (knowledge cutoff).</li>
-                  <li>Nói chắc như đúng rồi: model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).</li>
-                  <li>Bàn làm việc có hạn: context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa.</li>
+                  <li><strong>Bong bóng thời gian:</strong> model bị "đóng băng" tại ngày ngừng đọc — chuyện sau đó nó không biết trừ khi bạn cung cấp thêm (knowledge cutoff).</li>
+                  <li><strong>Nói chắc như đúng rồi:</strong> model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).</li>
+                  <li><strong>Bàn làm việc có hạn:</strong> context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa.</li>
                 </ul>
-                <div class="slide-takeaway">Đây không phải lỗi tạm thời — đó là bản chất của cỗ máy đoán token. Vì vậy ta cần prompt tốt, context sạch, tra sổ (RAG), tools, và luôn kiểm chứng. — Łukasz Kaiser, đồng tác giả "Attention Is All You Need".</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-12">
-              <div class="slide-badge">Trang 23 · 13/15</div>
+            <!-- Slide 6: Trang 23 (LLM đến Agent) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-6">
+              <div class="slide-badge">Trang 23 / 29 · thật</div>
               <h2 class="slide-heading">Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực</h2>
               <div class="slide-body">
                 <ul>
-                  <li>Level 0 — Bộ não suy luận: LLM trần — không công cụ, không dữ liệu mới.</li>
-                  <li>Level 1 — Có kết nối: + tools (search web, đọc database, gọi API) — vượt khỏi bong bóng thời gian.</li>
-                  <li>Level 2 — Biết lập kế hoạch: + tự chia mục tiêu thành nhiều bước, dùng nhiều tool nối tiếp, tự kiểm tra kết quả từng bước.</li>
-                  <li>Level 3 — Đội agent phối hợp: + nhiều agent chuyên biệt chia việc như một đội ngũ (multi-agent).</li>
+                  <li><strong>Level 0 — Bộ não suy luận:</strong> LLM trần — không công cụ, không dữ liệu mới.</li>
+                  <li><strong>Level 1 — Có kết nối:</strong> + tools (search web, đọc database, gọi API) — vượt khỏi bong bóng thời gian.</li>
+                  <li><strong>Level 2 — Biết lập kế hoạch:</strong> + tự chia mục tiêu thành nhiều bước, dùng nhiều tool nối tiếp, tự kiểm tra kết quả từng bước.</li>
+                  <li><strong>Level 3 — Đội agent phối hợp:</strong> + nhiều agent chuyên biệt chia việc như một đội ngũ (multi-agent).</li>
                 </ul>
-                <div class="slide-takeaway">Agent không phải "một loại model khác" — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động. Mức tự chủ &amp; tác động thật tăng dần từ Level 0 đến Level 3.</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-13">
-              <div class="slide-badge">Trang 27 · 14/15</div>
-              <h2 class="slide-heading">Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần</h2>
+            <!-- Slide 7: Trang 26 (Chọn model theo tầng) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-7">
+              <div class="slide-badge">Trang 26 / 29 · thật</div>
+              <h2 class="slide-heading">Chọn model theo TẦNG, không chọn theo tên</h2>
               <div class="slide-body">
-                <p>Ví dụ hóa đơn 1 lần gọi API: input 1.150 token × $3/1M = $0.00345; output 200 token × $15/1M = $0.00300; tổng ≈ $0.0065.</p>
-                <p>Đọc mục usage trong mỗi response — đó là hóa đơn chi tiết giúp bạn kiểm soát chi phí từ ngày đầu.</p>
+                <p>Hai lỗi đối xứng: việc đơn giản mà gọi frontier → phí tiền; việc khó mà cố dùng rẻ → kết quả tệ.</p>
                 <ul>
-                  <li>Vé vào — Input ×1: chữ BẠN gửi đi (prompt, system instruction, context, lịch sử chat) — rẻ vì model chỉ cần đọc.</li>
-                  <li>Vé ra — Output ×3–5: chữ MODEL viết ra — nó phải tự sinh từng mảnh một, vừa chậm vừa tốn — đắt vì model phải "vắt óc".</li>
+                  <li><strong>Tầng 1 — Frontier đóng:</strong> đắt nhất — chỉ trả cho việc thật sự khó.</li>
+                  <li><strong>Tầng 2 — Rẻ mà mạnh</strong> (mặc định thử tầng này trước): giải quyết đa số việc hằng ngày.</li>
+                  <li><strong>Tầng 3 — Self-host / siêu rẻ:</strong> khi cần kiểm soát dữ liệu hoặc chi phí quy mô lớn.</li>
                 </ul>
-                <div class="slide-takeaway">Input tokens (×1, rẻ vì model chỉ cần đọc) + Output tokens (×3–5, đắt vì model phải tự sinh từng mảnh một) = Chi phí mỗi lần gọi — kiểm soát output là núm vặn lớn nhất.</div>
               </div>
             </div>
 
-<div class="slide-item" id="slide-item-14">
-              <div class="slide-badge">Trang 29 · 15/15</div>
+            <!-- Slide 8: Trang 28 (Giải phẫu prompt) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-8">
+              <div class="slide-badge">Trang 28 / 29 · thật</div>
+              <h2 class="slide-heading">Giải phẫu một prompt: bốn lớp xếp chồng</h2>
+              <div class="slide-body">
+                <ul>
+                  <li><strong>Lớp 1 — System instruction:</strong> "lời dặn đầu ca" — model là ai, cư xử thế nào, không được làm gì.</li>
+                  <li><strong>Lớp 2 — User input:</strong> câu hỏi/yêu cầu của người dùng trong lượt này.</li>
+                  <li><strong>Lớp 3 — Context bổ sung:</strong> tài liệu, lịch sử chat, dữ liệu tra sổ — phần bày lên "bàn làm việc".</li>
+                  <li><strong>Lớp 4 — Output mong muốn:</strong> dạng kết quả mong muốn — gạch đầu dòng? bảng? JSON? dài bao nhiêu?</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Slide 9: Trang 29 (temperature & top_p) — nội dung THẬT -->
+            <div class="slide-item" id="slide-item-9">
+              <div class="slide-badge">Trang 29 / 29 · thật</div>
               <h2 class="slide-heading">Hai núm vặn chọn từ: temperature &amp; top_p</h2>
               <div class="slide-body">
                 <p>Lưu ý quan trọng: hai núm này không làm model thông minh hơn — chỉ đổi cách chọn từ, không thêm tri thức.</p>
@@ -871,58 +806,6 @@
                   <li>temperature — "núm vặn độ liều": T=0 luôn chọn từ chắc nhất (ổn định, hợp code &amp; phân tích); T=1 cân bằng tự nhiên; T=2 phân bố phẳng ra, dễ "lạc đề".</li>
                   <li>top_p — "chỉ xem top đầu bảng" (p=0.9): chỉ giữ nhóm từ có xác suất cộng dồn ≥ 90%, các từ đuôi xác suất thấp bị loại khỏi lựa chọn.</li>
                 </ul>
-                <div class="slide-takeaway">Mặc định an toàn: temperature = 0 cho việc cần ổn định — chỉ tăng khi thật sự cần đa dạng. Hai núm này không làm model thông minh hơn, chỉ đổi cách chọn từ, không thêm tri thức.</div>
-              </div>
-            </div>
-
-            <!-- Demo 1/3: slide minh họa cũ (không nằm trong 15 trang thật AI dùng để trả lời — chỉ để xem lại giao diện mẫu ban đầu) -->
-            <div class="slide-item" id="slide-item-15">
-              <div class="slide-badge">Demo 1 / 3 · minh họa</div>
-              <h2 class="slide-heading">Mục tiêu &amp; Nền tảng LLM</h2>
-              <div class="slide-body">
-                <p>Chào mừng bạn đến với khóa học <strong>AI Engineering &amp; Product</strong>. Trong ngày học đầu tiên, bạn sẽ làm quen với các khái niệm cốt lõi:</p>
-                <ul>
-                  <li><strong>Next-Token Prediction:</strong> Cơ chế dự đoán xác suất từ tiếp theo của các mô hình ngôn ngữ lớn.</li>
-                  <li><strong>Token Economy:</strong> Khái niệm về token, cách tính chi phí và độ trễ khi gọi model qua API.</li>
-                  <li><strong>Thực hành:</strong> Gọi mô hình GPT-4o, Claude 3.5 Sonnet và đo lường latency P90/P99.</li>
-                </ul>
-                <p><em>Hãy theo dõi slide và đặt câu hỏi cho AI Tutor nếu gặp khái niệm chưa rõ!</em></p>
-                <div class="slide-takeaway">Slide minh họa — nội dung này không nằm trong nguồn dữ liệu AI Tutor dùng để trả lời (xem worker/worker.js), chỉ hiển thị lại giao diện mẫu ban đầu.</div>
-              </div>
-            </div>
-
-            <!-- Demo 2/3: slide minh họa cũ -->
-            <div class="slide-item" id="slide-item-16">
-              <div class="slide-badge">Demo 2 / 3 · minh họa</div>
-              <h2 class="slide-heading">Kiến trúc Transformer &amp; Self-Attention</h2>
-              <div class="slide-body">
-                <p>Trọng tâm kỹ thuật tạo nên sự đột phá của LLM nằm ở cơ chế <strong>Self-Attention</strong>:</p>
-                <p class="text-highlight">
-                  "Cơ chế Self-Attention cho phép mô hình cân nhắc mối tương quan ngữ nghĩa giữa tất cả các từ trong câu đồng thời, loại bỏ điểm nghẽn xử lý tuần tự của các mạng RNN/LSTM cũ."
-                </p>
-                <ul>
-                  <li><strong>Multi-Head Attention:</strong> Chia không gian vector thành nhiều chiều quan sát độc lập.</li>
-                  <li><strong>Positional Encoding:</strong> Gắn thông tin vị trí vào từng token trước khi đưa vào khối xử lý.</li>
-                </ul>
-                <div class="slide-takeaway">Slide minh họa — nội dung này không nằm trong nguồn dữ liệu AI Tutor dùng để trả lời (xem worker/worker.js), chỉ hiển thị lại giao diện mẫu ban đầu.</div>
-              </div>
-            </div>
-
-            <!-- Demo 3/3: slide minh họa cũ -->
-            <div class="slide-item" id="slide-item-17">
-              <div class="slide-badge">Demo 3 / 3 · minh họa</div>
-              <h2 class="slide-heading">Token Economics &amp; Chi phí Inference</h2>
-              <div class="slide-body">
-                <p>Trong các sản phẩm AI thực tế, chi phí vận hành gắn liền trực tiếp với số lượng token:</p>
-                <p class="text-highlight">
-                  "Chi phí của một lời gọi API thường được tính dựa trên số lượng Input Tokens và Output Tokens. Thông thường, giá của Output Tokens cao hơn Input Tokens từ 2 đến 4 lần do chi phí tính toán autoregressive sinh từng từ."
-                </p>
-                <ul>
-                  <li><strong>Input Tokens:</strong> Prompt câu hỏi, tài liệu ngữ cảnh RAG.</li>
-                  <li><strong>Output Tokens:</strong> Câu trả lời được mô hình sinh ra theo từng bước.</li>
-                  <li><strong>KV-Cache:</strong> Kỹ thuật đệm bộ nhớ giúp giảm thiểu tính toán lặp lại.</li>
-                </ul>
-                <div class="slide-takeaway">Slide minh họa — nội dung này không nằm trong nguồn dữ liệu AI Tutor dùng để trả lời (xem worker/worker.js), chỉ hiển thị lại giao diện mẫu ban đầu.</div>
               </div>
             </div>
 
@@ -940,14 +823,6 @@
             <span class="dot-pill" id="dot-7" onclick="slideToIndex(7)"></span>
             <span class="dot-pill" id="dot-8" onclick="slideToIndex(8)"></span>
             <span class="dot-pill" id="dot-9" onclick="slideToIndex(9)"></span>
-            <span class="dot-pill" id="dot-10" onclick="slideToIndex(10)"></span>
-            <span class="dot-pill" id="dot-11" onclick="slideToIndex(11)"></span>
-            <span class="dot-pill" id="dot-12" onclick="slideToIndex(12)"></span>
-            <span class="dot-pill" id="dot-13" onclick="slideToIndex(13)"></span>
-            <span class="dot-pill" id="dot-14" onclick="slideToIndex(14)"></span>
-            <span class="dot-pill" id="dot-15" onclick="slideToIndex(15)"></span>
-            <span class="dot-pill" id="dot-16" onclick="slideToIndex(16)"></span>
-            <span class="dot-pill" id="dot-17" onclick="slideToIndex(17)"></span>
           </div>
         </div>
       </div>
@@ -1007,34 +882,14 @@
 
   <script src="config.js"></script>
   <script>
-    // Slide index mapping: index i -> Trang slidePages[i] (15/29 trang chọn lọc + retrieval nhẹ, xem worker/worker.js)
-    // 101-103: 3 slide minh họa cũ (Demo 1-3), KHÔNG thuộc bộ 15 trang thật AI dùng để trả lời
-    // -- dùng số ảo >=100 để không bao giờ trùng với citation_page thật (1-29) do worker.js trả về.
-    const DEMO_PAGE_OFFSET = 100;
-    const slidePages = [1, 3, 4, 5, 10, 11, 13, 14, 15, 17, 18, 20, 23, 27, 29, 101, 102, 103];
-    const SLIDE_QUOTES = {
-      1: { heading: `AI & LLM Foundation`, quote: `Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?` },
-      3: { heading: `AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?`, quote: `LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay. Thứ tự từ rộng đến hẹp: Artificial Intelligence ⊃ Machine Learning ⊃ Deep Learning ⊃ Generative AI ⊃ LLM (GPT · Claude · Kimi).` },
-      4: { heading: `Ba nhóm AI chính: phân loại · sinh nội dung · hành động`, quote: `LLM là engine chung của cả Generative lẫn Agentic — cuối buổi sáng mình sẽ thấy agent khác LLM ở đâu.` },
-      5: { heading: `Lịch sử AI 70 năm`, quote: `70 năm lịch sử AI: từ Dartmouth Workshop 1956, qua hai lần mùa đông AI (cách tiếp cận chạm trần), đến Deep Learning 2006, Transformer 2017, ChatGPT 2022 — từ model đơn lẻ sang system có khả năng hành động như agent.` },
-      10: { heading: `LLM là gì? — một bộ não nền, không phải một chatbot`, quote: `LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài. LLM = bộ não ngôn ngữ dùng chung cho mọi việc.` },
-      11: { heading: `Bên trong Transformer: đầu ra luôn là một phân bố xác suất`, quote: `Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — "land" 22%, "forest" 9%... — rồi chọn theo xác suất đó. (Transformers, the tech behind LLMs - 3Blue1Brown)` },
-      13: { heading: `Token: model không đọc "từ", model đọc mảnh chữ`, quote: `Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra. Mọi thứ model làm đều quy ra token — và mỗi token đều có giá.` },
-      14: { heading: `Context: bàn làm việc có hạn của model`, quote: `Context càng dài càng tốn tiền và càng chậm — bàn rộng không có nghĩa là dùng tốt. Quy đổi: 128K token ≈ một cuốn sách 300 trang; 1M token ≈ 4–5 cuốn sách trên bàn cùng lúc. (Hiện tượng "quên phần giữa": Liu et al. 2023, "Lost in the Middle")` },
-      15: { heading: `Attention: mỗi từ được "nhìn sang" những từ quan trọng khác`, quote: `Đây chính là chữ T trong GPT — và là lý do model hiểu ngữ cảnh tốt hơn hẳn các thế hệ trước. (Attention in transformers, step-by-step - 3Blue1Brown)` },
-      17: { heading: `Tham số (parameter): những "khớp nối" model học được`, quote: `Nhiều tham số không đồng nghĩa tốn hơn tuyến tính — nhờ MoE, bệnh viện lớn gấp 16 lần mà chi phí mỗi ca khám gần như không đổi. 2020 GPT-3: 175 tỷ tham số (dense). 2026 Kimi K3: ~2.800 tỷ tham số (MoE).` },
-      18: { heading: `LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề`, quote: `Đọc vạn cuốn sách chưa chắc biết trả lời phỏng vấn — đó là lý do cần bước SFT, RLHF/DPO, luyện suy luận sau Pre-training.` },
-      20: { heading: `Giới hạn bẩm sinh: học giả trong bong bóng`, quote: `Đây không phải lỗi tạm thời — đó là bản chất của cỗ máy đoán token. Vì vậy ta cần prompt tốt, context sạch, tra sổ (RAG), tools, và luôn kiểm chứng. — Łukasz Kaiser, đồng tác giả "Attention Is All You Need".` },
-      23: { heading: `Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực`, quote: `Agent không phải "một loại model khác" — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động. Mức tự chủ & tác động thật tăng dần từ Level 0 đến Level 3.` },
-      27: { heading: `Token có giá: vé vào rẻ, vé ra đắt gấp 3–5 lần`, quote: `Input tokens (×1, rẻ vì model chỉ cần đọc) + Output tokens (×3–5, đắt vì model phải tự sinh từng mảnh một) = Chi phí mỗi lần gọi — kiểm soát output là núm vặn lớn nhất.` },
-      29: { heading: `Hai núm vặn chọn từ: temperature & top_p`, quote: `Mặc định an toàn: temperature = 0 cho việc cần ổn định — chỉ tăng khi thật sự cần đa dạng. Hai núm này không làm model thông minh hơn, chỉ đổi cách chọn từ, không thêm tri thức.` }
-    };
-    let currentSlideIdx = 0; // Starts on Trang 1 (title slide)
-    let currentStep = 0; // 0 = Start, 1 = Happy Path (Trang 27), 2 = Cross-ref (Trang 15), 3 = Clarify (Trang 13), 4 = Out of scope
+    // Slide index mapping: 0 -> Trang 1, 1 -> Trang 5, 2 -> Trang 7
+    const slidePages = [1, 5, 7, 14, 17, 20, 23, 26, 28, 29];
+    let currentSlideIdx = 0; // Starts on Trang 1 (unrelated / intro)
+    let currentStep = 0; // 0 = Start, 1 = Happy Path (Slide 7), 2 = Cross-ref (Slide 5), 3 = Clarify (Slide 7), 4 = Out of scope
 
     // ---- Real AI Tutor integration (via Cloudflare Worker proxy — xem worker/worker.js) ----
     // Proxy giữ OPENAI_API_KEY phía server và tránh lỗi CORS khi gọi thẳng api.openai.com từ browser.
-    // System instruction + retrieval nhẹ (chọn top-K trang liên quan mỗi câu hỏi) nay sống trong worker/worker.js.
+    // System instruction + nội dung 3 đoạn slide (nguồn duy nhất) nay sống trong worker/worker.js.
 
     function escapeHtml(str) {
       const div = document.createElement('div');
@@ -1113,11 +968,8 @@
       const ribbon = document.getElementById('slides-ribbon');
       ribbon.style.transform = `translateX(-${idx * 100}%)`;
 
-      // Update page text (trang >= DEMO_PAGE_OFFSET là slide minh họa, hiển thị "Demo N" thay vì "Trang N")
-      const page = slidePages[idx];
-      document.getElementById('page-label').innerText = page >= DEMO_PAGE_OFFSET
-        ? `Demo ${page - DEMO_PAGE_OFFSET}`
-        : `Trang ${page}`;
+      // Update page text
+      document.getElementById('page-label').innerText = `Trang ${slidePages[idx]}`;
 
       // Update dots
       for (let i = 0; i < slidePages.length; i++) {
@@ -1152,10 +1004,12 @@
       const contextInfo = document.getElementById('context-info');
       const inputBox = document.getElementById('chat-input-box');
 
+      // Clear all active glows
+      document.querySelectorAll('.text-highlight').forEach(el => el.classList.remove('active-glow'));
       closeFlyout();
 
       if (step === 0) {
-        // Initial state: On Trang 1 (title slide)
+        // Initial state: On Trang 1 (unrelated intro)
         jumpToPage(1);
         stepIndicator.innerText = "Khởi đầu · Slide Trang 1";
         nextBtnLabel.innerText = "Bắt đầu học ➔";
@@ -1190,19 +1044,25 @@
           </div>
         `;
       } else if (step === 1) {
-        // Step 1: Slide moves to Page 27 (Token pricing) with smooth transition
-        jumpToPage(27);
-        stepIndicator.innerText = "Bước 1/4: Happy Path (Căn cứ [Trang 27])";
-        nextBtnLabel.innerText = "Tiếp theo (Trang 15)";
+        // Step 1: Slide moves to Page 7 (Token Economics) with smooth transition
+        jumpToPage(7);
+        stepIndicator.innerText = "Bước 1/4: Happy Path (Căn cứ [Trang 7])";
+        nextBtnLabel.innerText = "Tiếp theo (Trang 5)";
         resetBtn.style.display = "inline-block";
-        contextInfo.innerText = '📌 Đang chọn: "Vé ra — Output ×3-5..." [Trang 27]';
+        contextInfo.innerText = '📌 Đang chọn: "Chi phí của một lời gọi API..." [Trang 7]';
+
+        // Highlight snippet on Page 7
+        setTimeout(() => {
+          const h7 = document.getElementById('highlight-p7');
+          if (h7) h7.classList.add('active-glow');
+        }, 300);
 
         scroll.innerHTML += `
           <div class="chat-row user">
             <div class="user-context-note">
               <span>📎 Đoạn đính kèm:</span>
-              <span class="note-page">[Trang 27]</span>
-              <span>"Vé ra — Output ×3-5: chữ MODEL viết ra..."</span>
+              <span class="note-page">[Trang 7]</span>
+              <span>"Chi phí của một lời gọi API thường được tính..."</span>
             </div>
             <div class="msg-content">
               Tại sao Output Token lại đắt hơn Input Token?
@@ -1210,59 +1070,69 @@
           </div>
           <div class="chat-row tutor">
             <div class="msg-content">
-              Theo tài liệu bài giảng <span class="citation-tag" onclick="showFlyout(27)">[Trang 27]</span>, <strong>Output Token đắt hơn Input Token gấp 3-5 lần</strong> vì 2 lý do cốt lõi:<br><br>
-              1. <strong>Vé vào (Input) ×1:</strong> chữ bạn gửi đi (prompt, context) — rẻ vì model chỉ cần đọc <span class="citation-tag" onclick="showFlyout(27)">[Trang 27]</span>.<br>
-              2. <strong>Vé ra (Output) ×3-5:</strong> chữ model viết ra — nó phải tự sinh từng mảnh một, vừa chậm vừa tốn, nên đắt hơn vì model phải "vắt óc".
+              Theo tài liệu bài giảng <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>, <strong>Output Token đắt hơn Input Token từ 2 đến 4 lần</strong> vì 2 nguyên nhân cốt lõi:<br><br>
+              1. <strong>Cơ chế Autoregressive:</strong> Khi sinh output, mô hình phải tính toán tuần tự từng token một, không thể song song hóa hoàn toàn như khi nạp Input prompt <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>.<br>
+              2. <strong>Chi phí KV-Cache:</strong> Hệ thống phải lưu đệm trạng thái bộ nhớ GPU liên tục cho tới khi kết thúc sinh văn bản.
             </div>
             <div class="row-actions">
               <span class="action-btn" onclick="editInputPrompt()">✏️ Sửa câu hỏi (HAX G9)</span>
-              <span class="action-btn" onclick="showFlyout(27)">🔍 Xem nguồn [Trang 27]</span>
+              <span class="action-btn" onclick="showFlyout(7)">🔍 Xem nguồn [Trang 7]</span>
             </div>
           </div>
         `;
         scroll.scrollTop = scroll.scrollHeight;
       } else if (step === 2) {
-        // Step 2: Slide moves smoothly to Page 15 (Attention)
-        jumpToPage(15);
-        stepIndicator.innerText = "Bước 2/4: Lật trang [Trang 15] đối chiếu";
+        // Step 2: Slide moves smoothly to Page 5 (Self-Attention)
+        jumpToPage(5);
+        stepIndicator.innerText = "Bước 2/4: Lật trang [Trang 5] đối chiếu";
         nextBtnLabel.innerText = "Tiếp theo (Câu hỏi mơ hồ)";
-        contextInfo.innerText = '📌 Đang chọn: "Cơ chế attention cho phép mỗi token..." [Trang 15]';
+        contextInfo.innerText = '📌 Đang chọn: "Cơ chế Self-Attention cho phép..." [Trang 5]';
+
+        setTimeout(() => {
+          const h5 = document.getElementById('highlight-p5');
+          if (h5) h5.classList.add('active-glow');
+        }, 300);
 
         scroll.innerHTML += `
           <div class="chat-row user">
             <div class="user-context-note">
               <span>📎 Đoạn đính kèm:</span>
-              <span class="note-page">[Trang 15]</span>
-              <span>"Attention: mỗi từ được nhìn sang những từ quan trọng khác..."</span>
+              <span class="note-page">[Trang 5]</span>
+              <span>"Cơ chế Self-Attention cho phép mô hình..."</span>
             </div>
             <div class="msg-content">
-              Cơ chế Attention giải quyết vấn đề gì so với đọc tuần tự từng chữ?
+              Cơ chế Self-Attention giải quyết vấn đề gì của mạng tuần tự cũ?
             </div>
           </div>
           <div class="chat-row tutor">
             <div class="msg-content">
-              Tại slide <span class="citation-tag" onclick="showFlyout(15)">[Trang 15]</span>, thay vì đọc tuần tự từng chữ, <strong>attention cho phép mỗi token chủ động "quay đầu" nhìn lại các token trước đó</strong>, chấm điểm mức độ liên quan rồi khóa nghĩa theo ngữ cảnh — đây chính là chữ T trong GPT.
+              Tại slide <span class="citation-tag" onclick="showFlyout(5)">[Trang 5]</span>, giảng viên giải thích: <strong>Self-Attention tính toán mối tương quan của mọi cặp từ trong câu đồng thời</strong>, loại bỏ điểm nghẽn phải truyền dữ liệu tuần tự từng bước của RNN/LSTM cũ, nhờ đó xử lý được ngữ cảnh rất dài mà không bị mất mát thông tin.
             </div>
             <div class="row-actions">
               <span class="action-btn" onclick="editInputPrompt()">✏️ Sửa câu hỏi</span>
-              <span class="action-btn" onclick="showFlyout(15)">🔍 Đối chiếu [Trang 15]</span>
+              <span class="action-btn" onclick="showFlyout(5)">🔍 Đối chiếu [Trang 5]</span>
             </div>
           </div>
         `;
         scroll.scrollTop = scroll.scrollHeight;
       } else if (step === 3) {
-        // Step 3: Slide moves to Page 13, handles vague question with HAX G10
-        jumpToPage(13);
+        // Step 3: Slide moves back to Page 7, handles vague question with HAX G10
+        jumpToPage(7);
         stepIndicator.innerText = "Bước 3/4: HAX G10 (Thu hẹp khi mơ hồ)";
         nextBtnLabel.innerText = "Tiếp theo (Hỏi ngoài bài)";
-        contextInfo.innerText = '📌 Đang chọn đoạn ngắn: "Token" [Trang 13]';
+        contextInfo.innerText = '📌 Đang chọn đoạn ngắn: "Tokens" [Trang 7]';
+
+        setTimeout(() => {
+          const h7 = document.getElementById('highlight-p7');
+          if (h7) h7.classList.add('active-glow');
+        }, 300);
 
         scroll.innerHTML += `
           <div class="chat-row user">
             <div class="user-context-note">
               <span>📎 Đoạn đính kèm:</span>
-              <span class="note-page">[Trang 13]</span>
-              <span>"Token"</span>
+              <span class="note-page">[Trang 7]</span>
+              <span>"Tokens"</span>
             </div>
             <div class="msg-content">
               Cái này dùng để làm gì?
@@ -1270,11 +1140,11 @@
           </div>
           <div class="chat-row tutor">
             <div class="msg-content">
-              Đoạn bạn chọn ở <span class="citation-tag" onclick="showFlyout(13)">[Trang 13]</span> đề cập đến cả <em>khái niệm token là gì</em> (Trang 13) và <em>cách tính chi phí theo token</em> (Trang 27). Vì câu hỏi ngắn, để giải thích đúng nhu cầu của bạn:
+              Đoạn bạn chọn ở <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span> đề cập đến cả <em>khái niệm đơn vị Token</em> và <em>cách tính chi phí gọi API</em>. Vì câu hỏi ngắn, để giải thích đúng nhu cầu của bạn:
               <div class="g10-card">
                 <div class="g10-title">⚡ HAX G10: Thu hẹp phạm vi — Bạn muốn tìm hiểu hướng nào?</div>
-                <button class="g10-option-btn" onclick="chooseClarify(1)">👉 1. Model cắt văn bản thành token như thế nào (Trang 13)</button>
-                <button class="g10-option-btn" onclick="chooseClarify(2)">👉 2. Vì sao mỗi token đều tốn tiền (Trang 27)</button>
+                <button class="g10-option-btn" onclick="chooseClarify(1)">👉 1. Cách mô hình tách từ ngữ thành Token (Khái niệm cơ bản)</button>
+                <button class="g10-option-btn" onclick="chooseClarify(2)">👉 2. Cách tính chi phí gọi API theo đơn vị USD/MToK (Token Economics)</button>
               </div>
             </div>
             <div class="row-actions">
@@ -1333,16 +1203,41 @@
       sendUserMessage();
     }
 
-    // Citation interaction: jumps slide and displays flyout with the real quoted source (HAX G11)
+    // Citation interaction: jumps slide and displays flyout
     function showFlyout(pageNum) {
       jumpToPage(pageNum);
       const flyout = document.getElementById('flyout-box');
       const fTitle = document.getElementById('flyout-title');
       const fBody = document.getElementById('flyout-body');
-      const info = SLIDE_QUOTES[pageNum];
 
-      fTitle.innerText = `🔍 Căn cứ trích dẫn: Slide Trang ${pageNum}${info ? ' — ' + info.heading : ''}`;
-      fBody.innerText = info ? `Đoạn nguồn Trang ${pageNum}: "${info.quote}"` : `Không tìm thấy đoạn nguồn cho Trang ${pageNum}.`;
+      fTitle.innerText = `🔍 Căn cứ trích dẫn: Slide Trang ${pageNum}`;
+      if (pageNum === 7) {
+        fBody.innerText = 'Đoạn nguồn Trang 7: "Chi phí của một lời gọi API thường được tính dựa trên số lượng Input Tokens và Output Tokens. Thông thường, giá của Output Tokens cao hơn Input Tokens từ 2 đến 4 lần do chi phí tính toán autoregressive sinh từng từ."';
+        const h7 = document.getElementById('highlight-p7');
+        if (h7) h7.classList.add('active-glow');
+      } else if (pageNum === 5) {
+        fBody.innerText = 'Đoạn nguồn Trang 5: "Cơ chế Self-Attention cho phép mô hình cân nhắc mối tương quan ngữ nghĩa giữa tất cả các từ trong câu đồng thời, loại bỏ điểm nghẽn xử lý tuần tự của các mạng RNN/LSTM cũ."';
+        const h5 = document.getElementById('highlight-p5');
+        if (h5) h5.classList.add('active-glow');
+      } else if (pageNum === 1) {
+        fBody.innerText = 'Đoạn nguồn Trang 1: "Next-Token Prediction: Cơ chế dự đoán xác suất từ tiếp theo của các mô hình ngôn ngữ lớn."';
+      } else if (pageNum === 14) {
+        fBody.innerText = 'Đoạn nguồn Trang 14: "Mỗi lần trả lời, model chỉ nhìn được một lượng chữ có hạn — gọi là context. Quy đổi: 128K token ≈ một cuốn sách 300 trang; 1M token ≈ 4–5 cuốn sách trên bàn cùng lúc."';
+      } else if (pageNum === 17) {
+        fBody.innerText = "Đoạn nguồn Trang 17: \"Những gì model 'biết' nằm trong các con số cố định bên trong gọi là tham số. Tham số không phải thứ bạn chỉnh khi dùng model — nó được đóng gói sẵn trong 'bộ não' (file weights).\"";
+      } else if (pageNum === 20) {
+        fBody.innerText = "Đoạn nguồn Trang 20: \"Model bị 'đóng băng' tại ngày ngừng đọc (knowledge cutoff); model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).\"";
+      } else if (pageNum === 23) {
+        fBody.innerText = 'Đoạn nguồn Trang 23: "Level 0 — Bộ não suy luận: LLM trần, không công cụ. Level 1 — Có kết nối: + tools. Level 2 — Biết lập kế hoạch. Level 3 — Đội agent phối hợp."';
+      } else if (pageNum === 26) {
+        fBody.innerText = 'Đoạn nguồn Trang 26: "Chọn model theo TẦNG, không chọn theo tên. Bắt đầu từ model đủ tốt và đủ rẻ — chỉ nâng tầng khi kết quả thực sự chặn use case."';
+      } else if (pageNum === 28) {
+        fBody.innerText = 'Đoạn nguồn Trang 28: "1 prompt = 4 phần: System instruction, User input, Context bổ sung, Output mong muốn."';
+      } else if (pageNum === 29) {
+        fBody.innerText = 'Đoạn nguồn Trang 29: "temperature = 0 cho việc cần ổn định — chỉ tăng khi thật sự cần đa dạng. Hai núm này không làm model thông minh hơn, chỉ đổi cách chọn từ."';
+      } else {
+        fBody.innerText = `Không tìm thấy đoạn nguồn cho Trang ${pageNum}.`;
+      }
       flyout.style.display = 'block';
     }
 
@@ -1352,13 +1247,9 @@
 
     function chooseClarify(choice) {
       const scroll = document.getElementById('chat-scroll');
-      const text = (choice === 1)
-        ? "Model cắt văn bản thành token như thế nào?"
-        : "Vì sao mỗi token đều tốn tiền?";
-      const page = (choice === 1) ? 13 : 27;
-      const answer = (choice === 1)
-        ? `Theo nội dung tại <span class="citation-tag" onclick="showFlyout(13)">[Trang 13]</span>: model không nhìn từ nguyên vẹn, nó cắt văn bản thành các mảnh nhỏ gọi là token — có từ là một mảnh, có từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng cũng là mảnh. Tiếng Việt tốn token hơn tiếng Anh vì dấu thanh và ký tự đặc biệt bị cắt nhỏ ra.`
-        : `Theo nội dung tại <span class="citation-tag" onclick="showFlyout(27)">[Trang 27]</span>: mọi thứ model làm đều quy ra token và mỗi token đều có giá — input (chữ bạn gửi) tính ×1, output (chữ model tự sinh ra) tính ×3-5 vì model phải "vắt óc" sinh từng mảnh một.`;
+      const text = (choice === 1) 
+        ? "Mình muốn tìm hiểu cách phân rã từ ngữ thành Token." 
+        : "Mình muốn tìm hiểu cách tính chi phí API theo USD/MToK.";
 
       scroll.innerHTML += `
         <div class="chat-row user">
@@ -1366,10 +1257,7 @@
         </div>
         <div class="chat-row tutor">
           <div class="msg-content">
-            Cảm ơn bạn đã làm rõ! ${answer}
-          </div>
-          <div class="row-actions">
-            <span class="action-btn" onclick="showFlyout(${page})">🔍 Xem nguồn [Trang ${page}]</span>
+            Cảm ơn bạn đã làm rõ! Theo nội dung tại <span class="citation-tag" onclick="showFlyout(7)">[Trang 7]</span>: Chi phí được tính theo đơn vị Token vì LLM không đọc ký tự hay từ nguyên bản mà ánh xạ văn bản thành vector số đại diện. Việc tính tiền theo output token giúp nhà cung cấp bù đắp tài nguyên GPU phục vụ quá trình sinh từ tuần tự.
           </div>
         </div>
       `;
